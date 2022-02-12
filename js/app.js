@@ -1,15 +1,13 @@
-
 // You should not be able to click remaining empty cells after the game is over.
 
-
 // Detect draw conditions (ties/cat's game)
-
-
 
 const container = document.querySelector('body')
 const square = document.querySelectorAll('.square')
 const message = document.querySelector('#message')
 const reset = document.querySelector('#reset')
+const winningCombos = [(square[0].innerText === 'X' && square[1].innerText === 'X' && square[2].innerText === 'X')]
+let gameOver = false
 const player1 = {
     marking: 'X',
     isTurn: true,
@@ -25,7 +23,7 @@ const player2 = {
 //     Hint: Determine a set of winning combinations. Check those combinations on the board contents after every move.
 const checkResult = () => {
     // Check columns
-    if(square[0].innerText === 'X' && square[1].innerText === 'X' && square[2].innerText === 'X')
+    if(winningCombos[0])
     {
         return true
         // console.log('There is a winner')
@@ -117,18 +115,19 @@ const resetGame = () => {
     }
     player1.isTurn = true
     player2.isTurn = false
+    gameOver = false
     message.innerText = `Player1's Turn`
 }
 reset.addEventListener('click', resetGame)
 
 /***** STILL IN PROGRESS ******/
 // A cell should not be able to be replayed once marked. 
-const disableSquare = () => {
+const disableSquare = (event) => {
     for(let i = 0; i < 9; i++)
     {
-        if(square[i].innerText !== '')
+        if(event.target.innerText !== '')
         {
-            square[i].preventDefault()
+            event.preventDefault()
         }
     }
 }
@@ -145,11 +144,12 @@ container.addEventListener('click', (event) => {
         player2.isTurn = true
         // Display a message to indicate which turn is about to be played.
         message.innerText = `Player2's Turn`
-        // event.preventDefault()
+        disableSquare(event)
         if(checkResult())
         {
             player1.isWinner = true
-            console.log(`Player1 is the winner!`)
+            gameOver = true
+            message.innerText = `Player1 is the winner!`
         }
     }
     else if(event.target.tagName === 'DIV' && player2.isTurn === true)
@@ -159,11 +159,12 @@ container.addEventListener('click', (event) => {
         player1.isTurn = true
         // Display a message to indicate which turn is about to be played.
         message.innerText = `Player1's Turn`
-        // event.preventDefault()
+        disableSquare(event)
         if(checkResult())
         {
             player2.isWinner = true
-            console.log(`Player2 is the winner!`)
+            gameOver = true
+            message.innerText = `Player2 is the winner!`
         }
     }
 })
