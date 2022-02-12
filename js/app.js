@@ -12,27 +12,100 @@ const message = document.querySelector('#message')
 const reset = document.querySelector('#reset')
 const player1 = {
     marking: 'X',
-    isTurn: true
+    isTurn: true,
+    isWinner: null
 }
 const player2 = {
     marking: 'O',
-    isTurn: false
+    isTurn: false,
+    isWinner: null
 }
 
 // Detect winner: Stop game and declare the winner if one player ends up getting three in a row.
 //     Hint: Determine a set of winning combinations. Check those combinations on the board contents after every move.
 const checkResult = () => {
-    if(square[0].innerText === square[1].innerText && square[1].innerText === square[2].innerText)
+    // Check columns
+    if(square[0].innerText === 'X' && square[1].innerText === 'X' && square[2].innerText === 'X')
     {
-        console.log('There is a winner')
+        return true
+        // console.log('There is a winner')
     }
-    else if(square[3].innerText === square[4].innerText && square[4].innerText === square[5].innerText)
+    else if(square[3].innerText === 'X' && square[4].innerText === 'X' && square[5].innerText === 'X')
     {
-        console.log('There is a winner')
+        return true
+        // console.log('There is a winner')
     }
-    else if(square[6].innerText === square[7].innerText && square[7].innerText === square[8].innerText)
+    else if(square[6].innerText === 'X' && square[7].innerText === 'X' && square[8].innerText === 'X')
     {
-        console.log('There is a winner')
+        return true
+        // console.log('There is a winner')
+    }
+    else if(square[0].innerText === 'O' && square[1].innerText === 'O' && square[2].innerText === 'O')
+    {
+        return true
+        // console.log('There is a winner')
+    }
+    else if(square[3].innerText === 'O' && square[4].innerText === 'O' && square[5].innerText === 'O')
+    {
+        return true
+        // console.log('There is a winner')
+    }
+    else if(square[6].innerText === 'O' && square[7].innerText === 'O' && square[8].innerText === 'O')
+    {
+        return true
+        // console.log('There is a winner')
+    }
+    // Check rows
+    else if(square[0].innerText === 'X' && square[3].innerText === 'X' && square[6].innerText === 'X')
+    {
+        return true
+        // console.log('There is a winner')
+    }
+    else if(square[1].innerText === 'X' && square[4].innerText === 'X' && square[7].innerText === 'X')
+    {
+        return true
+        // console.log('There is a winner')
+    }
+    else if(square[2].innerText === 'X' && square[5].innerText === 'X' && square[8].innerText === 'X')
+    {
+        return true
+        // console.log('There is a winner')
+    }
+    else if(square[0].innerText === 'O' && square[3].innerText === 'O' && square[6].innerText === 'O')
+    {
+        return true
+        // console.log('There is a winner')
+    }
+    else if(square[1].innerText === 'O' && square[4].innerText === 'O' && square[7].innerText === 'O')
+    {
+        return true
+        // console.log('There is a winner')
+    }
+    else if(square[2].innerText === 'O' && square[5].innerText === 'O' && square[8].innerText === 'O')
+    {
+        return true
+        // console.log('There is a winner')
+    }
+    // Check Diagonals
+    else if(square[0].innerText === 'X' && square[4].innerText === 'X' && square[8].innerText === 'X')
+    {
+        return true
+        // console.log('There is a winner')
+    }
+    else if(square[0].innerText === 'O' && square[4].innerText === 'O' && square[8].innerText === 'O')
+    {
+        return true
+        // console.log('There is a winner')
+    }
+    else if(square[2].innerText === 'X' && square[4].innerText === 'X' && square[6].innerText === 'X')
+    {
+        return true
+        // console.log('There is a winner')
+    }
+    else if(square[2].innerText === 'O' && square[4].innerText === 'O' && square[6].innerText === 'O')
+    {
+        return true
+        // console.log('There is a winner')
     }
 }
 
@@ -42,6 +115,9 @@ const resetGame = () => {
     {
         square[i].innerText = ''
     }
+    player1.isTurn = true
+    player2.isTurn = false
+    message.innerText = `Player1's Turn`
 }
 reset.addEventListener('click', resetGame)
 
@@ -70,7 +146,11 @@ container.addEventListener('click', (event) => {
         // Display a message to indicate which turn is about to be played.
         message.innerText = `Player2's Turn`
         // event.preventDefault()
-        checkResult()
+        if(checkResult())
+        {
+            player1.isWinner = true
+            console.log(`Player1 is the winner!`)
+        }
     }
     else if(event.target.tagName === 'DIV' && player2.isTurn === true)
     {
@@ -80,6 +160,10 @@ container.addEventListener('click', (event) => {
         // Display a message to indicate which turn is about to be played.
         message.innerText = `Player1's Turn`
         // event.preventDefault()
-        checkResult()
+        if(checkResult())
+        {
+            player2.isWinner = true
+            console.log(`Player2 is the winner!`)
+        }
     }
 })

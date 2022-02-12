@@ -1,3 +1,7 @@
+body {
+    background-color: tomato;
+}
+
 #container {
     width: 800px;
     margin: 100px auto;
