@@ -1,12 +1,11 @@
-// You should not be able to click remaining empty cells after the game is over.
-
 // Detect draw conditions (ties/cat's game)
 
-const container = document.querySelector('body')
+/*********** GLOBAL VARIABLES **********/
 const square = document.querySelectorAll('.square')
+const squaresIDs = ['square1','square2','square3','square4','square5','square6','square7','square8','square9',]
 const message = document.querySelector('#message')
 const reset = document.querySelector('#reset')
-const winningCombos = [(square[0].innerText === 'X' && square[1].innerText === 'X' && square[2].innerText === 'X')]
+// const winningCombos = []
 let gameOver = false
 const player1 = {
     marking: 'X',
@@ -19,152 +18,101 @@ const player2 = {
     isWinner: null
 }
 
+/************* FUNCTIONS ************/
+
 // Detect winner: Stop game and declare the winner if one player ends up getting three in a row.
 //     Hint: Determine a set of winning combinations. Check those combinations on the board contents after every move.
-const checkResult = () => {
-    // Check columns
-    if(winningCombos[0])
+const checkWinner = (playerMarking) => {
+    // Winning combos
+    const combos = [
+        [0,1,2],
+        [3,4,5],
+        [6,7,8],
+        [0,3,6],
+        [1,4,7],
+        [2,5,8],
+        [0,4,8],
+        [2,4,6]
+    ]
+    for(let i = 0; i < combos.length; i++)
     {
-        return true
-        // console.log('There is a winner')
-    }
-    else if(square[3].innerText === 'X' && square[4].innerText === 'X' && square[5].innerText === 'X')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    else if(square[6].innerText === 'X' && square[7].innerText === 'X' && square[8].innerText === 'X')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    else if(square[0].innerText === 'O' && square[1].innerText === 'O' && square[2].innerText === 'O')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    else if(square[3].innerText === 'O' && square[4].innerText === 'O' && square[5].innerText === 'O')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    else if(square[6].innerText === 'O' && square[7].innerText === 'O' && square[8].innerText === 'O')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    // Check rows
-    else if(square[0].innerText === 'X' && square[3].innerText === 'X' && square[6].innerText === 'X')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    else if(square[1].innerText === 'X' && square[4].innerText === 'X' && square[7].innerText === 'X')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    else if(square[2].innerText === 'X' && square[5].innerText === 'X' && square[8].innerText === 'X')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    else if(square[0].innerText === 'O' && square[3].innerText === 'O' && square[6].innerText === 'O')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    else if(square[1].innerText === 'O' && square[4].innerText === 'O' && square[7].innerText === 'O')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    else if(square[2].innerText === 'O' && square[5].innerText === 'O' && square[8].innerText === 'O')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    // Check Diagonals
-    else if(square[0].innerText === 'X' && square[4].innerText === 'X' && square[8].innerText === 'X')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    else if(square[0].innerText === 'O' && square[4].innerText === 'O' && square[8].innerText === 'O')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    else if(square[2].innerText === 'X' && square[4].innerText === 'X' && square[6].innerText === 'X')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-    else if(square[2].innerText === 'O' && square[4].innerText === 'O' && square[6].innerText === 'O')
-    {
-        return true
-        // console.log('There is a winner')
-    }
-}
-
-// Add a reset button that will clear the contents of the board.
-const resetGame = () => {
-    for(let i = 0; i < 9; i++)
-    {
-        square[i].innerText = ''
-    }
-    player1.isTurn = true
-    player2.isTurn = false
-    gameOver = false
-    message.innerText = `Player1's Turn`
-}
-reset.addEventListener('click', resetGame)
-
-/***** STILL IN PROGRESS ******/
-// A cell should not be able to be replayed once marked. 
-const disableSquare = (event) => {
-    for(let i = 0; i < 9; i++)
-    {
-        if(event.target.innerText !== '')
+        if((square[combos[i][0]].innerText === playerMarking && square[combos[i][1]].innerText === playerMarking && square[combos[i][2]].innerText === playerMarking))
         {
-            event.preventDefault()
+            return true
         }
     }
 }
 
-// A user should be able to click on different squares to make a move.
-// Every click will alternate between marking an X and O
-// Upon marking of an individual cell, use JavaScript to add an X or O to the cell, according to whose turn it is.
-container.addEventListener('click', (event) => {
+const play = (event) => {
     //Alternate between player1 and player2
-    if(event.target.tagName === 'DIV' && player1.isTurn === true)
+    if(player1.isTurn === true)
     {
+        // console.log(event.target.preventDefault())
         event.target.innerText = player1.marking
         player1.isTurn = false
         player2.isTurn = true
         // Display a message to indicate which turn is about to be played.
         message.innerText = `Player2's Turn`
-        disableSquare(event)
-        if(checkResult())
+        // A cell should not be able to be replayed once marked.
+        event.target.removeEventListener('click', play)
+        if(checkWinner(player1.marking))
         {
             player1.isWinner = true
             gameOver = true
+            disableRemainingSquares(event)
             message.innerText = `Player1 is the winner!`
         }
     }
-    else if(event.target.tagName === 'DIV' && player2.isTurn === true)
+    else if(player2.isTurn === true)
     {
         event.target.innerText = player2.marking
         player2.isTurn = false
         player1.isTurn = true
         // Display a message to indicate which turn is about to be played.
         message.innerText = `Player1's Turn`
-        disableSquare(event)
-        if(checkResult())
+        // A cell should not be able to be replayed once marked.
+        event.target.removeEventListener('click', play)
+        if(checkWinner(player2.marking))
         {
             player2.isWinner = true
             gameOver = true
+            disableRemainingSquares(event)
             message.innerText = `Player2 is the winner!`
         }
     }
-})
+}
+
+// Add a reset button that will clear the contents of the board and reset player turns.
+const resetGame = () => {
+    // Re-add the play event listener to each square
+    for(let i = 0; i < 9; i++)
+    {
+        square[i].innerText = ''
+        document.getElementById(squaresIDs[i]).addEventListener('click', play)
+    }
+    // Reset player turns
+    player1.isTurn = true
+    player2.isTurn = false
+    gameOver = false
+    message.innerText = `Player1's Turn`
+}
+
+// You should not be able to click remaining empty cells after the game is over.
+const disableRemainingSquares = () => {
+    for(let i = 0; i < 9; i++)
+    {
+        if(document.getElementById(squaresIDs[i]).innerText == '')
+        {
+            document.getElementById(squaresIDs[i]).removeEventListener('click', play)
+        }
+    }
+}
+
+/************* EVENT LISTENERS **************/
+// Add an event listener to each div in .container div
+for(let i = 0; i < squaresIDs.length; i++)
+{
+    document.getElementById(squaresIDs[i]).addEventListener('click', play)
+}
+
+reset.addEventListener('click', resetGame)
