@@ -1,11 +1,8 @@
-// Detect draw conditions (ties/cat's game)
-
 /*********** GLOBAL VARIABLES **********/
 const square = document.querySelectorAll('.square')
 const squaresIDs = ['square1','square2','square3','square4','square5','square6','square7','square8','square9',]
 const message = document.querySelector('#message')
 const reset = document.querySelector('#reset')
-// const winningCombos = []
 let gameOver = false
 const player1 = {
     marking: 'X',
@@ -41,6 +38,22 @@ const checkWinner = (playerMarking) => {
             return true
         }
     }
+}
+
+// Detect draw conditions (ties/cat's game)
+const checkTie = () => {
+    for(let i = 0; i < square.length; i++)
+    {
+        if(square[i].innerText !== '')
+        {
+            continue
+        }
+        else 
+        {
+            return false
+        }
+    }
+    return true
 }
 
 const play = (event) => {
@@ -79,6 +92,11 @@ const play = (event) => {
             disableRemainingSquares(event)
             message.innerText = `Player2 is the winner!`
         }
+    }
+
+    if(checkTie())
+    {
+        message.innerText = `It's a tie`
     }
 }
 
