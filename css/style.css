@@ -1,0 +1,13 @@
+#container {
+    width: 800px;
+    margin: 100px auto;
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+.square {
+    border: 1px solid black;
+    text-align: center;
+    padding: 50px;
+    cursor: pointer;
+}
