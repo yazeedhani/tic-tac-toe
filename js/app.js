@@ -3,16 +3,20 @@ const square = document.querySelectorAll('.square')
 const squaresIDs = ['square1','square2','square3','square4','square5','square6','square7','square8','square9',]
 const message = document.querySelector('#message')
 const reset = document.querySelector('#reset')
+const player1Score = document.querySelector('#player1Score')
+const player2Score = document.querySelector('#player2Score')
 let gameOver = false
 const player1 = {
     marking: 'X',
     isTurn: true,
-    isWinner: null
+    isWinner: null,
+    score: 0
 }
 const player2 = {
     marking: 'O',
     isTurn: false,
-    isWinner: null
+    isWinner: null,
+    score: 0
 }
 
 /************* FUNCTIONS ************/
@@ -65,7 +69,7 @@ const play = (event) => {
         player1.isTurn = false
         player2.isTurn = true
         // Display a message to indicate which turn is about to be played.
-        message.innerText = `Player2's Turn`
+        message.innerText = `Player-2's Turn`
         // A cell should not be able to be replayed once marked.
         event.target.removeEventListener('click', play)
         if(checkWinner(player1.marking))
@@ -73,7 +77,9 @@ const play = (event) => {
             player1.isWinner = true
             gameOver = true
             disableRemainingSquares(event)
-            message.innerText = `Player1 is the winner!`
+            message.innerText = `Player-1 is the winner!`
+            player1.score++
+            player1Score.innerText = `${player1.score}`
         }
     }
     else if(player2.isTurn === true)
@@ -82,7 +88,7 @@ const play = (event) => {
         player2.isTurn = false
         player1.isTurn = true
         // Display a message to indicate which turn is about to be played.
-        message.innerText = `Player1's Turn`
+        message.innerText = `Player-1's Turn`
         // A cell should not be able to be replayed once marked.
         event.target.removeEventListener('click', play)
         if(checkWinner(player2.marking))
@@ -90,13 +96,15 @@ const play = (event) => {
             player2.isWinner = true
             gameOver = true
             disableRemainingSquares(event)
-            message.innerText = `Player2 is the winner!`
+            message.innerText = `Player-2 is the winner!`
+            player2.score++
+            player2Score.innerText = `${player2.score}`
         }
     }
 
     if(checkTie())
     {
-        message.innerText = `It's a tie`
+        message.innerText = `It's a tie.`
     }
 }
 
@@ -112,7 +120,7 @@ const resetGame = () => {
     player1.isTurn = true
     player2.isTurn = false
     gameOver = false
-    message.innerText = `Player1's Turn`
+    message.innerText = `Player-1's Turn`
 }
 
 // You should not be able to click remaining empty cells after the game is over.
